@@ -9,7 +9,6 @@ import java.util.Stack;
  * ============================================================
  *
  * Use Case 12: Strategy Pattern for Palindrome Algorithms
- *
  * Description:
  * This class demonstrates how different palindrome
  * validation algorithms can be selected dynamically
