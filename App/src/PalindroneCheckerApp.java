@@ -1,82 +1,104 @@
+import java.util.ArrayDeque;
+import java.util.Deque;
+import java.util.Scanner;
+
 /**
  * ============================================================
- * MAIN CLASS - UseCase6PalindromeCheckerApp
+ * MAIN CLASS - PalindromeCheckerApp
  * ============================================================
  *
- * Use Case 6: Queue + Stack Fairness Check
+ * Use Case 7: Deque Based Optimized Palindrome Checker
  *
  * Description:
- * This class demonstrates palindrome validation using
- * two different data structures:
+ * This class validates a palindrome using a Deque
+ * (Double Ended Queue).
  *
- * - Queue (FIFO - First In First Out)
- * - Stack (LIFO - Last In First Out)
+ * Characters are inserted into the deque and then
+ * compared by removing elements from both ends:
  *
- * Characters are inserted into both structures and then
- * compared by removing from the front of the queue and
- * the top of the stack.
+ * - removeFirst()
+ * - removeLast()
  *
- * If all characters match, the input string is confirmed
- * as a palindrome.
+ * This avoids reversing the string and provides an
+ * efficient front-to-back comparison approach.
  *
- * This use case helps understand how FIFO and LIFO
- * behaviors can be combined for symmetric comparison.
+ * This use case demonstrates optimal bidirectional
+ * traversal using Deque.
  *
  * @author Developer
- * @version 6.0
+ * @version 7.0
  */
-
-import java.util.LinkedList;
-import java.util.Queue;
-import java.util.Stack;
-
 public class PalindroneCheckerApp {
 
     /**
-     * Application entry point for UC6.
+     * Application entry point for UC7.
      *
      * @param args Command-line arguments
      */
     public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
 
-        // Define the input string to validate.
-        String input = "civic";
+        System.out.println("============================================================");
+        System.out.println("       UC7: Deque-Based Optimized Palindrome Checker        ");
+        System.out.println("============================================================");
+        System.out.print("Enter a string to check: ");
+        String input = scanner.nextLine();
 
-        // Create a Queue to store characters in FIFO order.
-        Queue<Character> queue = new LinkedList<>();
+        boolean result = isPalindrome(input);
 
-        // Create a Stack to store characters in LIFO order.
-        Stack<Character> stack = new Stack<>();
+        System.out.println("------------------------------------------------------------");
+        System.out.println("Input     : \"" + input + "\"");
+        System.out.println("Normalized: \"" + normalize(input) + "\"");
+        System.out.println("Result    : " + (result
+                ? "It IS a palindrome!"
+                : "It is NOT a palindrome."));
+        System.out.println("============================================================");
 
-        // Insert each character into both queue and stack.
-        for (char c : input.toCharArray()) {
-            queue.add(c);   // Enqueue - adds to rear
-            stack.push(c);  // Push - adds to top
+        scanner.close();
+    }
+
+    /**
+     * Checks whether the given string is a palindrome using a Deque.
+     *
+     * Flow:
+     * 1. Normalize the string (lowercase, remove non-alphanumeric chars)
+     * 2. Insert each character into the Deque
+     * 3. Repeatedly remove from both front and rear and compare
+     * 4. If all comparisons match, it is a palindrome
+     *
+     * @param input The string to validate
+     * @return true if palindrome, false otherwise
+     */
+    public static boolean isPalindrome(String input) {
+        String normalized = normalize(input);
+
+        // Step 1: Insert all characters into the Deque
+        Deque<Character> deque = new ArrayDeque<>();
+        for (char c : normalized.toCharArray()) {
+            deque.addLast(c);
         }
 
-        // Flag to track palindrome status.
-        boolean isPalindrome = true;
+        // Step 2: Compare front and rear using removeFirst() and removeLast()
+        while (deque.size() > 1) {
+            char front = deque.removeFirst();
+            char rear  = deque.removeLast();
 
-        // Compare characters until the queue becomes empty.
-        while (!queue.isEmpty()) {
-
-            // Dequeue from front (FIFO order).
-            char fromQueue = queue.poll();
-
-            // Pop from top (LIFO - reverse order).
-            char fromStack = stack.pop();
-
-            // Compare both characters.
-            if (fromQueue != fromStack) {
-                isPalindrome = false;
-                break;
+            if (front != rear) {
+                return false;
             }
         }
 
-        // Display the input string.
-        System.out.println("Input : " + input);
+        return true;
+    }
 
-        // Display the palindrome result.
-        System.out.println("Is Palindrome? : " + isPalindrome);
+    /**
+     * Normalizes the input string by converting to lowercase
+     * and removing all non-alphanumeric characters.
+     *
+     * @param input Raw input string
+     * @return Normalized string
+     */
+    private static String normalize(String input) {
+        return input.toLowerCase().replaceAll("[^a-z0-9]", "");
     }
 }
