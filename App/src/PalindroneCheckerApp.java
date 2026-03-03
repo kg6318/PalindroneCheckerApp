@@ -5,29 +5,27 @@ import java.util.Scanner;
  * MAIN CLASS - PalindromeCheckerApp
  * ============================================================
  *
- * Use Case 10: Normalized Palindrome Validation
+ * Use Case 11: Object-Oriented Palindrome Service
  *
  * Description:
- * This class validates a palindrome after preprocessing
- * the input string.
+ * This class demonstrates palindrome validation using
+ * object-oriented design.
  *
- * Normalization includes:
- * - Removing spaces and symbols
- * - Converting to lowercase
+ * The palindrome logic is encapsulated inside a
+ * PalindromeService class.
  *
- * This ensures the palindrome check is logical rather
- * than character-format dependent.
- *
- * Example:
- * "A man a plan a canal Panama"
+ * This improves:
+ * - Reusability
+ * - Readability
+ * - Separation of concerns
  *
  * @author Developer
- * @version 10.0
+ * @version 11.0
  */
 public class PalindroneCheckerApp {
 
     /**
-     * Application entry point for UC10.
+     * Application entry point for UC11.
      *
      * @param args Command-line arguments
      */
@@ -35,17 +33,18 @@ public class PalindroneCheckerApp {
         Scanner scanner = new Scanner(System.in);
 
         System.out.println("============================================================");
-        System.out.println("    UC10: Case-Insensitive & Space-Ignored Palindrome       ");
+        System.out.println("         UC11: Object-Oriented Palindrome Service           ");
         System.out.println("============================================================");
         System.out.print("Enter a string to check: ");
         String input = scanner.nextLine();
 
-        String normalized = normalize(input);
-        boolean result = isPalindrome(normalized);
+        // Instantiate the PalindromeService (Encapsulation)
+        PalindromeService service = new PalindromeService();
+        boolean result = service.checkPalindrome(input);
 
         System.out.println("------------------------------------------------------------");
         System.out.println("Input     : \"" + input + "\"");
-        System.out.println("Normalized: \"" + normalized + "\"");
+        System.out.println("Normalized: \"" + service.normalize(input) + "\"");
         System.out.println("Result    : " + (result
                 ? "It IS a palindrome!"
                 : "It is NOT a palindrome."));
@@ -53,23 +52,33 @@ public class PalindroneCheckerApp {
 
         scanner.close();
     }
+}
+
+/**
+ * Service class that contains palindrome logic.
+ *
+ * Follows Single Responsibility Principle:
+ * This class is solely responsible for palindrome validation.
+ *
+ * Data Structure used internally: char Array (two-pointer approach)
+ */
+class PalindromeService {
 
     /**
-     * Checks whether the normalized string is a palindrome
-     * using a two-pointer approach on a character array.
+     * Checks whether the input string is a palindrome.
      *
      * Flow:
-     * 1. Convert normalized string to char array
-     * 2. Use left and right pointers from both ends
-     * 3. Compare characters moving inward
-     * 4. If all match, return true
+     * 1. Normalize the input string
+     * 2. Convert to char array
+     * 3. Compare using left and right pointers
      *
-     * @param normalized The preprocessed string
+     * @param input Input string
      * @return true if palindrome, false otherwise
      */
-    public static boolean isPalindrome(String normalized) {
+    public boolean checkPalindrome(String input) {
+        String normalized = normalize(input);
 
-        // Convert to char array for indexed access
+        // Convert to char array for internal array-based comparison
         char[] chars = normalized.toCharArray();
 
         int left  = 0;
@@ -88,23 +97,15 @@ public class PalindroneCheckerApp {
     }
 
     /**
-     * Normalizes the input string using String preprocessing
-     * and Regular Expressions.
+     * Normalizes the input string.
      *
-     * Steps:
-     * - Convert to lowercase          → case-insensitive check
-     * - Remove non-alphanumeric chars → space and symbol ignored
+     * - Converts to lowercase
+     * - Removes spaces and non-alphanumeric characters
      *
      * @param input Raw input string
      * @return Normalized string
      */
-    public static String normalize(String input) {
-        // Step 1: Convert to lowercase
-        String lower = input.toLowerCase();
-
-        // Step 2: Remove spaces, symbols using regex
-        String cleaned = lower.replaceAll("[^a-z0-9]", "");
-
-        return cleaned;
+    public String normalize(String input) {
+        return input.toLowerCase().replaceAll("[^a-z0-9]", "");
     }
 }
