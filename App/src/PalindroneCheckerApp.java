@@ -23,7 +23,7 @@
 
 import java.util.Stack;
 
-public class UseCase5PalindromeCheckerApp {
+public class PalindroneCheckerApp {
 
     /**
      * Application entry point for UC5.
