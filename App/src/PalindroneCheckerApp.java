@@ -5,28 +5,29 @@ import java.util.Scanner;
  * MAIN CLASS - PalindromeCheckerApp
  * ============================================================
  *
- * Use Case 9: Recursive Palindrome Checker
+ * Use Case 10: Normalized Palindrome Validation
  *
  * Description:
- * This class checks whether a string is a palindrome
- * using Recursion.
+ * This class validates a palindrome after preprocessing
+ * the input string.
  *
- * The method calls itself by comparing characters
- * at the start and end positions:
+ * Normalization includes:
+ * - Removing spaces and symbols
+ * - Converting to lowercase
  *
- * - Base Condition: stops recursion when indices meet or cross
- * - Recursive Case: compares outer characters and moves inward
+ * This ensures the palindrome check is logical rather
+ * than character-format dependent.
  *
- * This demonstrates how the Call Stack manages
- * recursive method calls for symmetric validation.
+ * Example:
+ * "A man a plan a canal Panama"
  *
  * @author Developer
- * @version 9.0
+ * @version 10.0
  */
 public class PalindroneCheckerApp {
 
     /**
-     * Application entry point for UC9.
+     * Application entry point for UC10.
      *
      * @param args Command-line arguments
      */
@@ -34,13 +35,13 @@ public class PalindroneCheckerApp {
         Scanner scanner = new Scanner(System.in);
 
         System.out.println("============================================================");
-        System.out.println("         UC9: Recursive Palindrome Checker                  ");
+        System.out.println("    UC10: Case-Insensitive & Space-Ignored Palindrome       ");
         System.out.println("============================================================");
         System.out.print("Enter a string to check: ");
         String input = scanner.nextLine();
 
         String normalized = normalize(input);
-        boolean result = isPalindrome(normalized, 0, normalized.length() - 1);
+        boolean result = isPalindrome(normalized);
 
         System.out.println("------------------------------------------------------------");
         System.out.println("Input     : \"" + input + "\"");
@@ -54,43 +55,56 @@ public class PalindroneCheckerApp {
     }
 
     /**
-     * Recursively checks whether the given string is a palindrome.
+     * Checks whether the normalized string is a palindrome
+     * using a two-pointer approach on a character array.
      *
      * Flow:
-     * 1. Base Condition: if start >= end, all characters matched — return true
-     * 2. Compare characters at start and end index
-     * 3. If mismatch — return false
-     * 4. Recursive Case: move start forward and end backward
+     * 1. Convert normalized string to char array
+     * 2. Use left and right pointers from both ends
+     * 3. Compare characters moving inward
+     * 4. If all match, return true
      *
-     * @param str   The normalized string to validate
-     * @param start Starting index
-     * @param end   Ending index
+     * @param normalized The preprocessed string
      * @return true if palindrome, false otherwise
      */
-    public static boolean isPalindrome(String str, int start, int end) {
+    public static boolean isPalindrome(String normalized) {
 
-        // Base Condition: indices met or crossed — palindrome confirmed
-        if (start >= end) {
-            return true;
+        // Convert to char array for indexed access
+        char[] chars = normalized.toCharArray();
+
+        int left  = 0;
+        int right = chars.length - 1;
+
+        // Two-pointer comparison
+        while (left < right) {
+            if (chars[left] != chars[right]) {
+                return false;
+            }
+            left++;
+            right--;
         }
 
-        // Compare characters at current outer positions
-        if (str.charAt(start) != str.charAt(end)) {
-            return false;
-        }
-
-        // Recursive Case: move inward and check remaining substring
-        return isPalindrome(str, start + 1, end - 1);
+        return true;
     }
 
     /**
-     * Normalizes the input string by converting to lowercase
-     * and removing all non-alphanumeric characters.
+     * Normalizes the input string using String preprocessing
+     * and Regular Expressions.
+     *
+     * Steps:
+     * - Convert to lowercase          → case-insensitive check
+     * - Remove non-alphanumeric chars → space and symbol ignored
      *
      * @param input Raw input string
      * @return Normalized string
      */
-    private static String normalize(String input) {
-        return input.toLowerCase().replaceAll("[^a-z0-9]", "");
+    public static String normalize(String input) {
+        // Step 1: Convert to lowercase
+        String lower = input.toLowerCase();
+
+        // Step 2: Remove spaces, symbols using regex
+        String cleaned = lower.replaceAll("[^a-z0-9]", "");
+
+        return cleaned;
     }
 }
