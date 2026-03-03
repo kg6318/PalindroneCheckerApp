@@ -30,7 +30,7 @@ import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Stack;
 
-public class UseCase6PalindromeCheckerApp {
+public class PalindroneCheckerApp {
 
     /**
      * Application entry point for UC6.
