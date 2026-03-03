@@ -1,5 +1,3 @@
-import java.util.ArrayDeque;
-import java.util.Deque;
 import java.util.Scanner;
 
 /**
@@ -7,31 +5,41 @@ import java.util.Scanner;
  * MAIN CLASS - PalindromeCheckerApp
  * ============================================================
  *
- * Use Case 7: Deque Based Optimized Palindrome Checker
+ * Use Case 8: Linked List Based Palindrome Checker
  *
  * Description:
- * This class validates a palindrome using a Deque
- * (Double Ended Queue).
+ * This class checks whether a string is a palindrome
+ * using a LinkedList.
  *
- * Characters are inserted into the deque and then
- * compared by removing elements from both ends:
+ * Characters are added to the list and then compared
+ * by removing elements from both ends:
  *
  * - removeFirst()
  * - removeLast()
  *
- * This avoids reversing the string and provides an
- * efficient front-to-back comparison approach.
- *
- * This use case demonstrates optimal bidirectional
- * traversal using Deque.
+ * This demonstrates how LinkedList supports
+ * double-ended operations for symmetric validation.
  *
  * @author Developer
- * @version 7.0
+ * @version 8.0
  */
 public class PalindroneCheckerApp {
 
     /**
-     * Application entry point for UC7.
+     * Inner Node class for Singly Linked List.
+     */
+    static class Node {
+        char data;
+        Node next;
+
+        Node(char data) {
+            this.data = data;
+            this.next = null;
+        }
+    }
+
+    /**
+     * Application entry point for UC8.
      *
      * @param args Command-line arguments
      */
@@ -39,7 +47,7 @@ public class PalindroneCheckerApp {
         Scanner scanner = new Scanner(System.in);
 
         System.out.println("============================================================");
-        System.out.println("       UC7: Deque-Based Optimized Palindrome Checker        ");
+        System.out.println("       UC8: Linked List Based Palindrome Checker            ");
         System.out.println("============================================================");
         System.out.print("Enter a string to check: ");
         String input = scanner.nextLine();
@@ -58,13 +66,14 @@ public class PalindroneCheckerApp {
     }
 
     /**
-     * Checks whether the given string is a palindrome using a Deque.
+     * Checks whether the given string is a palindrome
+     * using a Singly Linked List with Fast and Slow Pointer Technique.
      *
      * Flow:
-     * 1. Normalize the string (lowercase, remove non-alphanumeric chars)
-     * 2. Insert each character into the Deque
-     * 3. Repeatedly remove from both front and rear and compare
-     * 4. If all comparisons match, it is a palindrome
+     * 1. Convert normalized string to a singly linked list
+     * 2. Find middle using fast and slow pointers
+     * 3. Reverse the second half in-place
+     * 4. Compare first half and reversed second half
      *
      * @param input The string to validate
      * @return true if palindrome, false otherwise
@@ -72,23 +81,66 @@ public class PalindroneCheckerApp {
     public static boolean isPalindrome(String input) {
         String normalized = normalize(input);
 
-        // Step 1: Insert all characters into the Deque
-        Deque<Character> deque = new ArrayDeque<>();
+        if (normalized.length() <= 1) return true;
+
+        // Step 1: Build the linked list
+        Node head = null;
+        Node tail = null;
         for (char c : normalized.toCharArray()) {
-            deque.addLast(c);
-        }
-
-        // Step 2: Compare front and rear using removeFirst() and removeLast()
-        while (deque.size() > 1) {
-            char front = deque.removeFirst();
-            char rear  = deque.removeLast();
-
-            if (front != rear) {
-                return false;
+            Node newNode = new Node(c);
+            if (head == null) {
+                head = newNode;
+                tail = newNode;
+            } else {
+                tail.next = newNode;
+                tail = newNode;
             }
         }
 
-        return true;
+        // Step 2: Find middle using fast and slow pointers
+        Node slow = head;
+        Node fast = head;
+        while (fast != null && fast.next != null) {
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+
+        // Step 3: Reverse the second half in-place
+        Node secondHalf = reverseList(slow);
+
+        // Step 4: Compare first half and reversed second half
+        Node firstHalf = head;
+        Node temp = secondHalf;
+        boolean isPalin = true;
+
+        while (temp != null) {
+            if (firstHalf.data != temp.data) {
+                isPalin = false;
+                break;
+            }
+            firstHalf = firstHalf.next;
+            temp = temp.next;
+        }
+
+        return isPalin;
+    }
+
+    /**
+     * Reverses a singly linked list in-place.
+     *
+     * @param head Head node of the list to reverse
+     * @return New head of the reversed list
+     */
+    private static Node reverseList(Node head) {
+        Node prev = null;
+        Node current = head;
+        while (current != null) {
+            Node nextNode = current.next;
+            current.next = prev;
+            prev = current;
+            current = nextNode;
+        }
+        return prev;
     }
 
     /**
